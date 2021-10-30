@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <title>レンダリングセクション</title>
+</head>
+<body>
+  <!-- 条件付レンダリング if文みたいな感じ -->
+  <div id="app">
+    <!-- ok=trueだと表示されfalseだと表示されない。 -->
+    <p v-if="ok">OK!</p>
+    <!-- elseを使用すると逆のものを表示できる。但しv-ifの真下でないと反応しない -->
+    <p v-if="ok1">OK!</p>
+    <p v-else="ok1">Not OK</p>
+    <!-- else-ifを使用するとif -else-if文ののように処理できる。但しelse-ifはifの直後である必要がある -->
+    <p v-if="ok2">OK!</p>
+    <p v-else-if="maybeOK">maybe OK!</p>
+    <p v-else="ok2">Not OK</p>
+  </div>
+  <div id="template">
+  <!-- テンプレートタグ。これを使うと囲まれた要素全てに対してjsを掛けられる。今回は3つに掛けている -->
+  <!-- divでもできるが検証ツールではdivタグは検出される。tempateタグは検出されない -->
+    <template v-if="ok">
+      <p>Hello</p>
+      <p>Good Morning</p>
+      <p>Good Evening</p>
+    </template>
+    <button @click="ok = !ok">切り替え</button>
+  </div>
+  <!-- v-ifと見た目上は同じ動きをする -->
+  <div id="show">
+   <!-- v-if:要素ごと消す。 c-show:dicplay:noneで消す。つまりcssベースで消すという違いがある -->
+    <!-- 但しv-showだとtemplateタグが使えなかったり、if - else-if文が使えないというデメリットもある -->
+    <!-- v-ifのデメリット：切り替えに時間がかかる -->
+    <p v-if="ok">OKです!</p>
+    <!-- v-showのデメリット：画面表示が遅くなる -->
+    <p v-show="ok">OKです!</p>
+    <button @click="ok = !ok">切り替え</button>
+  </div>
+  <!-- v-forディレクティブ -->
+  <div id="for">
+    <ul>
+      <!-- 変数名 in 回したい変数名 で繰り返し表現できる。 -->
+      <li v-for="fruit in fruits">{{ fruit }}</li>
+      <!-- 第二引数にindex（他の文字列も可）をとると書くとできる -->
+      <li v-for="(sport, index) in sports">{{ index }}.{{ sport }}</li>
+      <!-- オブジェクトを繰り返し表現する場合。順番は保証されないので注意すること。 -->
+      <li v-for="value in object">{{ value }}</li>
+      <!-- オブジェクトは第二引数にオブジェクトのキー。第三引数にindexを取ることができる -->
+      <li v-for="(value, key, index) in object">{{ index }}{{ key }}{{ value }}</li>
+    </ul>
+    <ul>
+    <!-- v-forもtemplateタグと組み合わせて全ての要素に対して繰り返しが行える -->
+      <template v-for="fruit in fruits">
+        <li>{{ fruit }}</li>
+        <!-- 区切りを示す。ホライゾンタグ-->
+        <hr>
+      </template>
+      <ul>
+        <!-- v-forは整数値のレンダリングもできる下記では1-10までの整数値を表示している -->
+        <li v-for="n in 10">{{ n }}</li>
+      </ul>
+      <ul>
+        <!-- v-forのinはofに書き換え可能。jsのイテレータ構文みたいになる -->
+        <li v-for="n of 10">{{ n }}</li>
+      </ul>
+    </ul>
+    <ul>
+      <div v-for="fruit in fruits" :key="fruit">
+        <!-- 効率よく表示しようとするのでinputタグの中身がズレる -->
+        <!-- しかしv-bindでkeyを与えると対応付ができるのでエラーにならない -->
+        <!-- 注意：key属性を指定する場合はtemplate属性は使えない -->
+        <!-- 注意：indexを指定してあげてもうまくいかない。理由はindexはレンダリング時に振りなおされるから -->
+        <!-- 注意：一意に決まる値を指定してあげる必要がある -->
+        <!-- ポイント：v-forディレクティブを使用する場合は絶対に:key（キー属性）を指定すること -->
+        <p>{{ fruit }}</p>
+        <input type="text" />
+      </div>
+    </ul>
+    <button @click="remove">先頭を削除する</button>
+  </div>
+  <script src="js/index.js"></script>
+</body>
+</html>
